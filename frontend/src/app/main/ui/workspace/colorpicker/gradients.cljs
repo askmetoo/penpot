@@ -6,6 +6,7 @@
 
 (ns app.main.ui.workspace.colorpicker.gradients
   (:require
+   [app.common.data.macros :as dm]
    [cuerdas.core :as str]
    [rumext.alpha :as mf]))
 
@@ -18,7 +19,8 @@
         gradient-css (str/join "," (map format-stop stops))]
     (str/fmt "linear-gradient(90deg, %s)" gradient-css)))
 
-(mf/defc gradients [{:keys [type stops editing-stop on-select-stop]}]
+(mf/defc gradients
+  [{:keys [type stops editing-stop on-select-stop]}]
   (when (#{:linear-gradient :radial-gradient} type)
     [:div.gradient-stops
      [:div.gradient-background-wrapper
@@ -29,7 +31,8 @@
         [:div.gradient-stop
          {:class (when (= editing-stop offset) "active")
           :on-click (partial on-select-stop offset)
-          :style {:left (str (* offset 100) "%")}}
+          :style {:left (str (* offset 100) "%")}
+          :key (dm/str offset)}
 
          (let [{:keys [hex r g b alpha]} value]
            [:*
